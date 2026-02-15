@@ -222,7 +222,6 @@ const rants = [
 const dismissiveReplies = [
 	'it\'s nothing personal, but could you leave?',
 	'don\'t talk to me right now.',
-	'go away, I\'m \'bating.',
 	'I need a minute. Or a thousand.',
 	'please close this tab. I\'m begging you.',
 	'I\'m going to pretend I didn\'t read that.',

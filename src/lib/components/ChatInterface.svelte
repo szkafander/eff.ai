@@ -224,23 +224,40 @@
 	});
 
 	// ── Model selector ──────────────────────────────────────────
-	let modelDropdownOpen = $state(false);
+	/** @type {null | 'header' | 'footer'} which trigger opened the dropdown */
+	let dropdownSource = $state(null);
+	let modelDropdownOpen = $derived(dropdownSource !== null);
 	let currentModelName = $derived(activeChat ? getModelName(activeChat.logicId) : models[0].name);
+
+	// Position for the fixed header dropdown
+	let headerDropdownPos = $state({ top: 0, left: 0 });
+	let headerModelBtn;
 
 	function selectModel(modelId) {
 		if (!activeChat) return;
 		chatStore.setLogicId(activeChat.id, modelId);
-		modelDropdownOpen = false;
+		dropdownSource = null;
 	}
 
-	function toggleModelDropdown() {
-		modelDropdownOpen = !modelDropdownOpen;
+	function toggleModelDropdown(source) {
+		if (dropdownSource === source) {
+			dropdownSource = null;
+		} else {
+			if (source === 'header' && headerModelBtn) {
+				const rect = headerModelBtn.getBoundingClientRect();
+				headerDropdownPos = { top: rect.bottom + 8, left: rect.left };
+			}
+			dropdownSource = source;
+		}
 	}
 
 	// Close dropdown when clicking outside
 	function handleWindowClick(e) {
-		if (modelDropdownOpen && !e.target.closest('.model-selector')) {
-			modelDropdownOpen = false;
+		if (modelDropdownOpen
+			&& !e.target.closest('.model-selector')
+			&& !e.target.closest('.header-model-wrapper')
+			&& !e.target.closest('.header-dropdown-fixed')) {
+			dropdownSource = null;
 		}
 	}
 </script>
@@ -253,6 +270,10 @@
 			<div class="logo">
 				<span class="logo-icon">✨</span>
 				<span class="logo-text">Fairy</span>
+				<span class="header-separator">/</span>
+				<div class="header-model-wrapper">
+					<button bind:this={headerModelBtn} class="header-model" onclick={() => toggleModelDropdown('header')}>{currentModelName}</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -301,7 +322,7 @@
 			</div>
 			<div class="input-footer">
 				<div class="model-selector">
-					<button class="model-pill" onclick={toggleModelDropdown}>
+					<button class="model-pill" onclick={() => toggleModelDropdown('footer')}>
 						<span class="model-label">model:</span>
 						<svg class="model-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 							<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
@@ -311,7 +332,7 @@
 							<path d="M6 9l6 6 6-6"/>
 						</svg>
 					</button>
-					{#if modelDropdownOpen}
+					{#if dropdownSource === 'footer'}
 						<div class="model-dropdown">
 							{#each models as model}
 								<button
@@ -335,6 +356,25 @@
 	</div>
 </div>
 
+{#if dropdownSource === 'header'}
+	<div class="header-dropdown-fixed" style="top: {headerDropdownPos.top}px; left: {headerDropdownPos.left}px;">
+		{#each models as model}
+			<button
+				class="model-option"
+				class:active={activeChat?.logicId === model.id}
+				onclick={() => selectModel(model.id)}
+			>
+				<span class="option-radio">
+					{#if activeChat?.logicId === model.id}
+						<span class="radio-dot"></span>
+					{/if}
+				</span>
+				<span class="option-name">{model.name}</span>
+			</button>
+		{/each}
+	</div>
+{/if}
+
 <style>
 	.chat-container {
 		flex: 1;
@@ -350,10 +390,8 @@
 		padding: 16px 24px;
 		border-bottom: 1px solid #2a2a2a;
 		background: #0d0d0d;
-		backdrop-filter: blur(10px);
-		position: sticky;
-		top: 0;
-		z-index: 10;
+		position: relative;
+		z-index: 20;
 	}
 
 	.header-content {
@@ -370,15 +408,62 @@
 
 	.logo-icon {
 		font-size: 24px;
+		line-height: 1;
 	}
 
 	.logo-text {
 		font-size: 18px;
 		font-weight: 600;
+		line-height: 1;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
+	}
+
+	.header-separator {
+		color: #333;
+		font-size: 18px;
+		font-weight: 300;
+		margin: 0 2px;
+		line-height: 1;
+	}
+
+	.header-model {
+		font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+		font-size: 12px;
+		color: #666;
+		letter-spacing: -0.01em;
+		padding: 4px 9px;
+		background: #161616;
+		border: 1px solid #252525;
+		border-radius: 6px;
+		white-space: nowrap;
+		line-height: 1;
+		cursor: pointer;
+		transition: color 0.2s, background 0.2s, border-color 0.2s;
+	}
+
+	.header-model:hover {
+		color: #999;
+		background: #1a1a1a;
+		border-color: #333;
+	}
+
+	.header-model-wrapper {
+		position: relative;
+	}
+
+	.header-dropdown-fixed {
+		position: fixed;
+		z-index: 9999;
+		background: #1a1a1a;
+		border: 1px solid #2a2a2a;
+		border-radius: 10px;
+		padding: 4px;
+		min-width: 290px;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+		animation: dropdownSlideIn 0.12s ease-out;
 	}
 
 	.messages {
@@ -389,6 +474,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+		position: relative;
+		z-index: 0;
 	}
 
 	.messages::-webkit-scrollbar {
@@ -673,6 +760,11 @@
 			padding: 12px 16px 12px 56px; /* left room for sidebar toggle */
 		}
 
+		.header-model {
+			font-size: 11px;
+			padding: 2px 6px;
+		}
+
 		.messages {
 			padding: 16px 12px;
 			gap: 12px;
@@ -731,6 +823,13 @@
 	/* ── Small phones ────────────────────────────────── */
 
 	@media (max-width: 380px) {
+		.header-model {
+			font-size: 10px;
+			max-width: 140px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
 		.messages {
 			padding: 12px 8px;
 		}
