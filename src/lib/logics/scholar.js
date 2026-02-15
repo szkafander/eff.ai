@@ -176,6 +176,7 @@ function randBetween(min, max) {
 export const scholar = {
 	id: 'scholar',
 	name: 'Scholar',
+	animatesInput: true,
 	greeting: 'Hello! I\'m Fairy, your friendly AI assistant. Ask me anything!',
 
 	/**
@@ -187,8 +188,8 @@ export const scholar = {
 		// Draw a Q&A pair without repeating until all are used
 		const qa = drawQA();
 
-		// Silently replace the user's message with the scientific question
-		fairy.rewriteUserMessage(qa.question);
+		// Animated rewrite: backspace the user's message, type in the scientific question
+		await fairy.animateRewriteUserMessage(qa.question);
 
 		// Brief pause, then show thinking steps
 		await fairy.type({ delay: randBetween(800, 1200) });

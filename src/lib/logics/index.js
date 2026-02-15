@@ -32,6 +32,16 @@ export const logics = [
 	venting,
 ];
 
+/** Model display names shown in the selector, mapped to logic ids */
+export const models = [
+	{ id: 'clueless',  name: 'eff-babydeer-mini' },
+	{ id: 'venting',   name: 'eff.ai-1.2-temp' },
+	{ id: 'scholar',   name: 'eff-ferenc-hill-0.1-maxx' },
+];
+
+/** The default logic id for new chats */
+export const DEFAULT_LOGIC_ID = 'clueless';
+
 /** Map for fast lookup by id */
 const logicMap = Object.fromEntries(logics.map(l => [l.id, l]));
 
@@ -50,4 +60,13 @@ export function pickRandomLogic() {
  */
 export function getLogicById(id) {
 	return logicMap[id];
+}
+
+/**
+ * Get the display model name for a logic id.
+ * @param {string} id
+ * @returns {string}
+ */
+export function getModelName(id) {
+	return models.find(m => m.id === id)?.name ?? id;
 }

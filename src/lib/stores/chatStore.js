@@ -1,18 +1,8 @@
-import { writable, get } from 'svelte/store';
-import { pickRandomLogic, getLogicById } from '$lib/logics/index.js';
-import { debugLogicOverride } from '$lib/stores/debugStore.js';
+import { writable } from 'svelte/store';
+import { getLogicById, DEFAULT_LOGIC_ID } from '$lib/logics/index.js';
 
-function pickLogic() {
-	const override = get(debugLogicOverride);
-	if (override) {
-		const logic = getLogicById(override);
-		if (logic) return logic;
-	}
-	return pickRandomLogic();
-}
-
-// Bootstrap the first chat with a logic
-const firstLogic = pickLogic();
+// Bootstrap the first chat with the default logic
+const firstLogic = getLogicById(DEFAULT_LOGIC_ID);
 
 function createChatStore() {
 	const { subscribe, set, update } = writable({
@@ -56,7 +46,7 @@ function createChatStore() {
 		},
 		createNewChat: () => {
 			update(state => {
-				const logic = pickLogic();
+				const logic = getLogicById(DEFAULT_LOGIC_ID);
 				const newChat = {
 					id: Date.now().toString(),
 					title: 'New Chat',
@@ -81,6 +71,15 @@ function createChatStore() {
 				...state,
 				activeChat: chatId
 			}));
+		},
+		setLogicId: (chatId, logicId) => {
+			update(state => {
+				const newChats = state.chats.map(chat => {
+					if (chat.id !== chatId) return chat;
+					return { ...chat, logicId };
+				});
+				return { ...state, chats: newChats };
+			});
 		},
 		rewriteLastUserMessage: (chatId, newContent) => {
 			update(state => {

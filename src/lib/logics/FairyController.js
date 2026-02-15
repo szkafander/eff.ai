@@ -37,6 +37,7 @@ export class FairyController {
 	 * @param {() => Promise<void>}           callbacks.clearThinking  — should animate out then resolve
 	 * @param {(content: string) => void}     callbacks.addReply
 	 * @param {(content: string) => void}     callbacks.rewriteUserMessage
+	 * @param {(content: string) => Promise<void>} callbacks.animateRewriteUserMessage
 	 */
 	constructor(callbacks) {
 		/** @private */
@@ -103,6 +104,15 @@ export class FairyController {
 	 */
 	rewriteUserMessage(content) {
 		this._cb.rewriteUserMessage(content);
+	}
+
+	/**
+	 * Animated rewrite: quickly "backspaces" the user's message and
+	 * "types" the new content in its place, then commits to the store.
+	 * @param {string} content
+	 */
+	async animateRewriteUserMessage(content) {
+		await this._cb.animateRewriteUserMessage(content);
 	}
 
 	// ── Final reply ─────────────────────────────────────────────
