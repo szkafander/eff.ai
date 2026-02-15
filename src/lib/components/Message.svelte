@@ -1,14 +1,16 @@
 <script>
 	import { onMount } from 'svelte';
 
-	let { role, content, streaming = false, onStreamEnd = () => {} } = $props();
+	let { role, content, streaming = false, cursor = false, onStreamEnd = () => {} } = $props();
 
 	let streamProgress = $state(streaming && role === 'assistant' ? 0 : -1);
-	let showCursor = $state(streaming && role === 'assistant');
+	let streamCursor = $state(streaming && role === 'assistant');
 
 	let displayedContent = $derived(
 		streamProgress >= 0 ? content.slice(0, streamProgress) : content
 	);
+
+	let showCursor = $derived(streamCursor || cursor);
 
 	onMount(() => {
 		if (!streaming || role !== 'assistant') return;
@@ -20,7 +22,7 @@
 			streamProgress += charsPerTick;
 			if (streamProgress >= content.length) {
 				streamProgress = -1;
-				showCursor = false;
+				streamCursor = false;
 				clearInterval(interval);
 				onStreamEnd();
 			}
@@ -29,7 +31,7 @@
 		return () => {
 			clearInterval(interval);
 			streamProgress = -1;
-			showCursor = false;
+			streamCursor = false;
 		};
 	});
 </script>

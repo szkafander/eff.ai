@@ -160,6 +160,15 @@ export const clueless = {
 		}
 
 		fairy.setTyping(false);
-		fairy.reply(addTypos(pick(replies)));
+		await fairy.replyTyped(addTypos(pick(replies)), {
+			baseDelay: 160,
+			jitter: 120,
+			mistypeChance: 0.18,
+			mistypeDelay: 280,
+			backspaceDelay: 140,
+			pauseChance: 0.12,
+			pauseMin: 500,
+			pauseMax: 1400,
+		});
 	}
 };

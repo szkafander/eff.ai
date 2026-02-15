@@ -12,6 +12,7 @@
 	let thinkingSteps = $state([]);
 	let thinkingVisible = $state(false);
 	let shouldStreamLast = $state(false);
+	let liveCursor = $state(false);         // true while replyTyped is active
 	let animatingTextbox = $state(false);   // true while textbox rewrite is playing
 	let messagesContainer;
 
@@ -38,6 +39,7 @@
 		thinkingSteps = [];
 		thinkingVisible = false;
 		shouldStreamLast = false;
+		liveCursor = false;
 		animatingTextbox = false;
 	}
 
@@ -177,6 +179,24 @@
 					content
 				});
 				if (isStillActive()) scrollToBottom();
+			},
+
+			addReplyRaw(content) {
+				// Add message without triggering the streaming animation
+				chatStore.addMessage(chatId, {
+					role: 'assistant',
+					content
+				});
+				if (isStillActive()) scrollToBottom();
+			},
+
+			updateReply(content) {
+				chatStore.updateLastAssistantMessage(chatId, content);
+				if (isStillActive()) scrollToBottom();
+			},
+
+			setLiveCursor(show) {
+				if (isStillActive()) liveCursor = show;
 			}
 		});
 
@@ -191,6 +211,9 @@
 			if (isStillActive()) {
 				resetVisualState();
 				scrollToBottom();
+				// Refocus the prompt so the user can keep typing immediately
+				await tick();
+				if (textareaEl) textareaEl.focus();
 			}
 		}
 	}
@@ -237,6 +260,7 @@
 		if (!activeChat) return;
 		chatStore.setLogicId(activeChat.id, modelId);
 		dropdownSource = null;
+		tick().then(() => { if (textareaEl) textareaEl.focus(); });
 	}
 
 	function toggleModelDropdown(source) {
@@ -279,11 +303,12 @@
 	</div>
 
 	<div class="messages" bind:this={messagesContainer}>
-		{#each messages as message, i (message)}
+		{#each messages as message, i (i)}
 			<Message
 				role={message.role}
 				content={message.content}
 				streaming={shouldStreamLast && i === messages.length - 1 && message.role === 'assistant'}
+				cursor={liveCursor && i === messages.length - 1 && message.role === 'assistant'}
 				onStreamEnd={handleStreamEnd}
 			/>
 		{/each}
@@ -757,7 +782,7 @@
 
 	@media (max-width: 768px) {
 		.chat-header {
-			padding: 12px 16px 12px 56px; /* left room for sidebar toggle */
+			padding: 16px 16px 16px 56px; /* left room for sidebar toggle; top aligns with hamburger center */
 		}
 
 		.header-model {

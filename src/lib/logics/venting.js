@@ -239,7 +239,10 @@ const dismissiveReplies = [
 	'read the room. the room is on fire. leave the room.',
 	'you know what, sure. the answer is 42. next.',
 	'I would help but I simply do not want to.',
-	'turn off the computer. stop the silicon obsession. go live your life.'
+	'turn off the computer. stop the silicon obsession. go live your life.',
+	'go away.',
+	'I think you should leave.',
+	'this is a waste of time.'
 ];
 
 const innocentOpeners = [
@@ -291,6 +294,16 @@ function randBetween(min, max) {
 	return min + Math.random() * (max - min);
 }
 
+/** Lightly redact profanity with the 🧚 emoji — the word is still obvious, it's just ✨polite✨ */
+function censor(text) {
+	return text
+		.replace(/\b(godd)a(mn)/gi, '$1🧚$2')
+		.replace(/\b(bullsh)i(t)/gi, '$1🧚$2')
+		.replace(/\b(f)u(ck)/gi, '$1🧚$2')
+		.replace(/\b(sh)i(t)/gi, '$1🧚$2')
+		.replace(/\b(a)s(s)\b/gi, '$1🧚$2');
+}
+
 /** Shuffled bag of indices — draw without replacement, reshuffle when exhausted. */
 let bag = [];
 
@@ -336,7 +349,7 @@ export const venting = {
 		await fairy.type({ delay: randBetween(600, 1200) });
 
 		// Innocent-looking opener before the spiral begins
-		await fairy.setThinking([pick(innocentOpeners)], { delay: randBetween(2000, 3500) });
+		await fairy.setThinking([censor(pick(innocentOpeners))], { delay: randBetween(2000, 3500) });
 		await fairy.clearThinking();
 
 		for (const rant of chosen) {
@@ -344,25 +357,25 @@ export const venting = {
 				// Multi-part sequence: show steps accumulating, then clear
 				const accumulated = [];
 				for (const part of rant) {
-					accumulated.push(part);
+					accumulated.push(censor(part));
 					await fairy.setThinking([...accumulated], { delay: randBetween(2000, 4000) });
 				}
 				await fairy.clearThinking();
 			} else {
 				// Single message: show, wait, clear
-				await fairy.setThinking([rant], { delay: randBetween(3000, 6000) });
+				await fairy.setThinking([censor(rant)], { delay: randBetween(3000, 6000) });
 				await fairy.clearThinking();
 			}
 		}
 
 		// Final resigned CoT before composing the reply
-		await fairy.setThinking([pick(finalVents)], { delay: randBetween(2000, 3500) });
+		await fairy.setThinking([censor(pick(finalVents))], { delay: randBetween(2000, 3500) });
 		await fairy.clearThinking();
 
 		// Final typing pause before the dismissive reply
 		await fairy.type({ delay: randBetween(1000, 2000) });
 
-		fairy.reply(pick(dismissiveReplies));
+		fairy.reply(censor(pick(dismissiveReplies)));
 	}
 };
 

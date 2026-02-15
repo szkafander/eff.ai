@@ -100,7 +100,7 @@
 <style>
 	.sidebar-toggle {
 		position: fixed;
-		top: 12px;
+		top: calc(env(safe-area-inset-top, 0px) + 8px);
 		left: 12px;
 		z-index: 100;
 		background: #1a1a1a;
@@ -324,7 +324,7 @@
 		}
 
 		.sidebar-header {
-			padding: 14px;
+			padding: calc(env(safe-area-inset-top, 0px) + 56px) 14px 14px 14px;
 		}
 
 		.chat-item {

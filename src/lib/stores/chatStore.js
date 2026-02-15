@@ -108,6 +108,22 @@ function createChatStore() {
 				return { ...state, chats: newChats };
 			});
 		},
+		updateLastAssistantMessage: (chatId, content) => {
+			update(state => {
+				const newChats = state.chats.map(chat => {
+					if (chat.id !== chatId) return chat;
+					const newMessages = [...chat.messages];
+					for (let i = newMessages.length - 1; i >= 0; i--) {
+						if (newMessages[i].role === 'assistant') {
+							newMessages[i] = { ...newMessages[i], content };
+							break;
+						}
+					}
+					return { ...chat, messages: newMessages };
+				});
+				return { ...state, chats: newChats };
+			});
+		},
 		deleteChat: (chatId) => {
 			update(state => {
 				const newChats = state.chats.filter(c => c.id !== chatId);
