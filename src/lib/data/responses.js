@@ -6,7 +6,7 @@
 const responses = {
 	// Greeting patterns
 	greetings: [
-		"Hello! I'm Fairy, your friendly AI assistant! (Disclaimer: not actually AI, just very enthusiastic JavaScript)",
+		"Hello! I'm Fairy, your efficient AI assistant! (Disclaimer: not actually AI, just very enthusiastic JavaScript)",
 		"Hi there! I'm Fairy, powered by cutting-edge technology from 1995: if-statements!",
 		"Greetings, human! I'm Fairy, here to help with... well, whatever these pre-written responses can handle!"
 	],

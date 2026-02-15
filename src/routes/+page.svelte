@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>Fairy - Your Friendly AI Assistant</title>
+	<title>Fairy - Your Efficient AI Assistant</title>
 </svelte:head>
 
 <main>

@@ -100,7 +100,7 @@ function sleep(ms) {
 export const clueless = {
 	id: 'clueless',
 	name: 'Clueless',
-	greeting: 'Hello! I\'m Fairy, your friendly AI assistant. Ask me anything!',
+	greeting: 'Hello! I\'m Fairy, your efficient AI assistant. Ask me anything!',
 
 	/**
 	 * @param {string} _userMessage

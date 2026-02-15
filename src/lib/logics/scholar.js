@@ -294,7 +294,7 @@ export const scholar = {
 	id: 'scholar',
 	name: 'Scholar',
 	animatesInput: true,
-	greeting: 'Hello! I\'m Fairy, your friendly AI assistant. Ask me anything!',
+	greeting: 'Hello! I\'m Fairy, your efficient AI assistant. Ask me anything!',
 
 	/**
 	 * @param {string} _userMessage

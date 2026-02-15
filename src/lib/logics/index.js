@@ -35,7 +35,7 @@ export const logics = [
 /** Model display names shown in the selector, mapped to logic ids */
 export const models = [
 	{ id: 'clueless',  name: 'eff-babydeer-mini' },
-	{ id: 'venting',   name: 'eff.ai-1.2-thinking' },
+	{ id: 'venting',   name: 'eff.ai-1.2.3-thinking' },
 	{ id: 'scholar',   name: 'eff-stable-genius-0.1-maxx' },
 ];
 
