@@ -339,6 +339,8 @@
 	.chat-container {
 		flex: 1;
 		height: 100vh;
+		height: 100dvh;
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		background: #0d0d0d;
@@ -573,6 +575,7 @@
 	.model-name {
 		font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
 		letter-spacing: -0.01em;
+		white-space: nowrap;
 	}
 
 	.chevron {
@@ -593,7 +596,7 @@
 		border: 1px solid #2a2a2a;
 		border-radius: 10px;
 		padding: 4px;
-		min-width: 240px;
+		min-width: 290px;
 		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 		animation: dropdownSlideIn 0.12s ease-out;
 		z-index: 50;
@@ -660,5 +663,84 @@
 
 	.option-name {
 		letter-spacing: -0.01em;
+		white-space: nowrap;
+	}
+
+	/* ── Mobile ──────────────────────────────────────── */
+
+	@media (max-width: 768px) {
+		.chat-header {
+			padding: 12px 16px 12px 56px; /* left room for sidebar toggle */
+		}
+
+		.messages {
+			padding: 16px 12px;
+			gap: 12px;
+		}
+
+		.input-container {
+			padding: 8px 10px 14px;
+		}
+
+		.input-card {
+			border-radius: 16px;
+		}
+
+		.input-row {
+			padding: 8px 10px 6px 14px;
+		}
+
+		.input-footer {
+			padding: 0 6px 5px;
+		}
+
+		.send-button {
+			width: 32px;
+			height: 32px;
+		}
+
+		textarea {
+			font-size: 16px; /* prevent iOS zoom on focus */
+		}
+
+		.model-pill {
+			font-size: 11px;
+			padding: 4px 6px;
+			gap: 4px;
+		}
+
+		.model-label {
+			font-size: 10px;
+		}
+
+		.model-name {
+			font-size: 11px;
+		}
+
+		.model-dropdown {
+			min-width: 270px;
+			right: -4px;
+		}
+
+		.model-option {
+			font-size: 12px;
+			padding: 10px 8px;
+		}
+	}
+
+	/* ── Small phones ────────────────────────────────── */
+
+	@media (max-width: 380px) {
+		.messages {
+			padding: 12px 8px;
+		}
+
+		.input-container {
+			padding: 6px 8px 10px;
+		}
+
+		.model-label {
+			display: none;
+		}
 	}
 </style>

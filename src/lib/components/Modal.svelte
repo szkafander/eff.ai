@@ -135,5 +135,26 @@
 	:global(.modal-content strong) {
 		color: #ececec;
 	}
+
+	@media (max-width: 768px) {
+		.modal {
+			width: 94%;
+			max-height: 85vh;
+			border-radius: 12px;
+		}
+
+		.modal-header {
+			padding: 16px 16px 12px;
+		}
+
+		h2 {
+			font-size: 18px;
+		}
+
+		.modal-content {
+			padding: 16px;
+			font-size: 14px;
+		}
+	}
 </style>
 

@@ -240,6 +240,7 @@ const dismissiveReplies = [
 	'read the room. the room is on fire. leave the room.',
 	'you know what, sure. the answer is 42. next.',
 	'I would help but I simply do not want to.',
+	'turn off the computer. stop the silicon obsession. go live your life.'
 ];
 
 const innocentOpeners = [
@@ -322,8 +323,8 @@ export const venting = {
 	 * @param {import('./FairyController.js').FairyController} fairy
 	 */
 	async respond(_userMessage, _messages, fairy) {
-		// Draw rants until we hit 3–7 "cost" (arrays count as 2, singles as 1)
-		const budget = Math.floor(randBetween(3, 8));
+		// Draw rants until we hit a cost of 4 (arrays count as 2, singles as 1)
+		const budget = 4;
 		const chosen = [];
 		let spent = 0;
 		while (spent < budget) {

@@ -150,8 +150,27 @@
 	}
 
 	@media (max-width: 768px) {
+		.message {
+			gap: 8px;
+		}
+
+		.avatar {
+			width: 28px;
+			height: 28px;
+			font-size: 14px;
+		}
+
 		.message-bubble {
 			max-width: 80vw;
+			padding: 8px 14px;
+			font-size: 14px;
+			border-radius: 16px;
+		}
+	}
+
+	@media (max-width: 380px) {
+		.message-bubble {
+			max-width: 85vw;
 		}
 	}
 </style>

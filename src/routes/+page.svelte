@@ -2,28 +2,18 @@
 	import ChatInterface from '$lib/components/ChatInterface.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Modal from '$lib/components/Modal.svelte';
-	import DebugModal from '$lib/components/DebugModal.svelte';
 	import { getMenuContent } from '$lib/data/menuContent.js';
 
 	let showModal = $state(false);
-	let showDebug = $state(false);
 	let modalContent = $state({ title: '', content: '' });
 
 	function handleMenuItemClick(itemId) {
-		if (itemId === 'debug') {
-			showDebug = true;
-			return;
-		}
 		modalContent = getMenuContent(itemId);
 		showModal = true;
 	}
 
 	function closeModal() {
 		showModal = false;
-	}
-
-	function closeDebug() {
-		showDebug = false;
 	}
 </script>
 
@@ -37,12 +27,13 @@
 	{#if showModal}
 		<Modal title={modalContent.title} content={modalContent.content} onClose={closeModal} />
 	{/if}
-	{#if showDebug}
-		<DebugModal onClose={closeDebug} />
-	{/if}
 </main>
 
 <style>
+	:global(*, *::before, *::after) {
+		box-sizing: border-box;
+	}
+
 	:global(body) {
 		margin: 0;
 		padding: 0;
@@ -54,12 +45,19 @@
 		background: #0d0d0d;
 		color: #ececec;
 		overflow: hidden;
+		/* Support safe areas on notched phones */
+		padding-top: env(safe-area-inset-top);
+		padding-bottom: env(safe-area-inset-bottom);
+		padding-left: env(safe-area-inset-left);
+		padding-right: env(safe-area-inset-right);
 	}
 
 	main {
 		display: flex;
 		height: 100vh;
+		height: 100dvh; /* dynamic viewport height — accounts for mobile address bars */
 		width: 100%;
+		overflow: hidden;
 	}
 </style>
 
