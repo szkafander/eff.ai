@@ -12,6 +12,11 @@
 		showModal = true;
 	}
 
+	function handleShowModelInfo() {
+		modalContent = getMenuContent('models');
+		showModal = true;
+	}
+
 	function closeModal() {
 		showModal = false;
 	}
@@ -23,7 +28,7 @@
 
 <main>
 	<Sidebar onMenuItemClick={handleMenuItemClick} />
-	<ChatInterface />
+	<ChatInterface onShowModelInfo={handleShowModelInfo} />
 	{#if showModal}
 		<Modal title={modalContent.title} content={modalContent.content} onClose={closeModal} />
 	{/if}

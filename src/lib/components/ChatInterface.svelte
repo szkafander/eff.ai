@@ -6,6 +6,8 @@
 	import Message from './Message.svelte';
 	import ThinkingBlock from './ThinkingBlock.svelte';
 
+	let { onShowModelInfo = () => {} } = $props();
+
 	let input = $state('');
 	let isTyping = $state(false);
 	let isProcessing = $state(false);
@@ -298,6 +300,7 @@
 				<div class="header-model-wrapper">
 					<button bind:this={headerModelBtn} class="header-model" onclick={() => toggleModelDropdown('header')}>{currentModelName}</button>
 				</div>
+				<button class="model-help-btn" onclick={onShowModelInfo} aria-label="About models">?</button>
 			</div>
 		</div>
 	</div>
@@ -357,6 +360,7 @@
 							<path d="M6 9l6 6 6-6"/>
 						</svg>
 					</button>
+					<button class="model-help-btn" onclick={onShowModelInfo} aria-label="About models">?</button>
 					{#if dropdownSource === 'footer'}
 						<div class="model-dropdown">
 							{#each models as model}
@@ -475,6 +479,31 @@
 		border-color: #333;
 	}
 
+	.model-help-btn {
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		border: 1px solid #333;
+		background: transparent;
+		color: #555;
+		font-size: 11px;
+		font-weight: 600;
+		line-height: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: color 0.2s, border-color 0.2s, background 0.2s;
+		flex-shrink: 0;
+		padding: 0;
+	}
+
+	.model-help-btn:hover {
+		color: #999;
+		border-color: #555;
+		background: #1a1a1a;
+	}
+
 	.header-model-wrapper {
 		position: relative;
 	}
@@ -590,7 +619,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
-		padding: 0 8px 6px;
+		padding: 4px 8px;
 		border-top: 1px solid #222;
 	}
 
@@ -650,6 +679,9 @@
 
 	.model-selector {
 		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 6px;
 	}
 
 	.model-pill {
@@ -808,7 +840,7 @@
 		}
 
 		.input-footer {
-			padding: 0 6px 5px;
+			padding: 3px 6px;
 		}
 
 		.send-button {

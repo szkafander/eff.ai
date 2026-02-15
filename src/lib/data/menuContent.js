@@ -42,6 +42,26 @@ const menuContent = {
 			<p>We are a team of 3 people, all of us are engineers and we are all passionate about AI. We are based in the United States and Europe.</p>
 			<p>Stay tuned for more updates!</p>
 		`
+	},
+	'models': {
+		title: 'Available Models',
+		content: `
+			<div style="margin-bottom: 20px;">
+				<p style="margin-bottom: 4px;"><strong style="font-size: 15px; color: #ececec;">eff-babydeer-mini</strong></p>
+				<p style="color: #667eea; font-size: 12px; margin-bottom: 8px;"><em>Lightweight · Low-resource · Personal use</em></p>
+				<p>Our smallest model, designed for low-resource environments and personal use. Not ultra sophisticated, but sufficient for most use cases — and consumes less energy than a traditional web search.</p>
+			</div>
+			<div style="margin-bottom: 20px;">
+				<p style="margin-bottom: 4px;"><strong style="font-size: 15px; color: #ececec;">eff.ai-1.2.3-thinking</strong></p>
+				<p style="color: #667eea; font-size: 12px; margin-bottom: 8px;"><em>Flagship · Chain-of-thought · Transparent reasoning</em></p>
+				<p>Our flagship thinking model. Eager, transparent, and step-by-step — it will tell you what it's thinking. Productive and thorough.</p>
+			</div>
+			<div>
+				<p style="margin-bottom: 4px;"><strong style="font-size: 15px; color: #ececec;">eff-stable-genius-0.1-maxx</strong></p>
+				<p style="color: #667eea; font-size: 12px; margin-bottom: 8px;"><em>Maximum capability · Research-grade · Multi-domain</em></p>
+				<p>Our most powerful model. For the most demanding use cases that require multiple PhDs.</p>
+			</div>
+		`
 	}
 };
 
