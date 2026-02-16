@@ -16,6 +16,7 @@
 	let shouldStreamLast = $state(false);
 	let liveCursor = $state(false);         // true while replyTyped is active
 	let animatingTextbox = $state(false);   // true while textbox rewrite is playing
+	let passiveInProgress = $state(false);  // true during empath-style passive responses
 	let messagesContainer;
 
 	function sleepMs(ms) {
@@ -43,6 +44,7 @@
 		shouldStreamLast = false;
 		liveCursor = false;
 		animatingTextbox = false;
+		passiveInProgress = false;
 	}
 
 	async function scrollToBottom(smooth = false) {
@@ -228,6 +230,79 @@
 		textareaEl.style.height = textareaEl.scrollHeight + 'px';
 	}
 
+	function handleInput() {
+		autoResize();
+		checkInputTrigger();
+	}
+
+	function checkInputTrigger() {
+		if (!logic?.checkInput || !activeChat) return;
+		if (isProcessing || passiveInProgress) return;
+		if (logic.checkInput(input)) {
+			triggerPassiveResponse();
+		}
+	}
+
+	async function triggerPassiveResponse() {
+		if (!activeChat || !logic) return;
+		passiveInProgress = true;
+		animatingTextbox = true; // lock the textarea
+
+		const chatId = activeChat.id;
+		const chatLogic = logic;
+		const isStillActive = () => $chatStore.activeChat === chatId;
+
+		// ── Backspace the user's text ──
+		const backspaceTick = 18;
+		const backspaceChars = Math.max(1, Math.ceil(input.length / 25));
+		while (input.length > 0) {
+			input = input.slice(0, Math.max(0, input.length - backspaceChars));
+			autoResize();
+			await sleepMs(backspaceTick);
+		}
+		if (textareaEl) textareaEl.style.height = 'auto';
+		animatingTextbox = false;
+
+		const controller = new FairyController({
+			setTyping(visible) {
+				if (isStillActive()) { isTyping = visible; scrollToBottom(); }
+			},
+			addThinkingStep() {},
+			setThinkingSteps() {},
+			clearThinking() { return Promise.resolve(); },
+			rewriteUserMessage() {},
+			animateRewriteUserMessage() { return Promise.resolve(); },
+			addReply(content) {
+				if (isStillActive()) shouldStreamLast = true;
+				chatStore.addMessage(chatId, { role: 'assistant', content });
+				if (isStillActive()) scrollToBottom();
+			},
+			addReplyRaw(content) {
+				chatStore.addMessage(chatId, { role: 'assistant', content });
+				if (isStillActive()) scrollToBottom();
+			},
+			updateReply(content) {
+				chatStore.updateLastAssistantMessage(chatId, content);
+				if (isStillActive()) scrollToBottom();
+			},
+			setLiveCursor(show) {
+				if (isStillActive()) liveCursor = show;
+			}
+		});
+
+		try {
+			await chatLogic.respondPassive(input, messages, controller);
+		} finally {
+			if (isStillActive()) {
+				resetVisualState();
+				scrollToBottom();
+				await tick();
+				if (textareaEl) textareaEl.focus();
+			}
+			passiveInProgress = false;
+		}
+	}
+
 	function handleKeydown(event) {
 		if (event.key === 'Enter' && !event.shiftKey) {
 			event.preventDefault();
@@ -331,7 +406,7 @@
 				<textarea
 					bind:this={textareaEl}
 					bind:value={input}
-					oninput={autoResize}
+					oninput={handleInput}
 					onkeydown={handleKeydown}
 					placeholder="Message Fairy..."
 					rows="1"
