@@ -56,10 +56,15 @@ const menuContent = {
 				<p style="color: #667eea; font-size: 12px; margin-bottom: 8px;"><em>Flagship · Chain-of-thought · Transparent reasoning</em></p>
 				<p>Our flagship thinking model. Eager, transparent, and step-by-step — it will tell you what it's thinking. Productive and thorough.</p>
 			</div>
-			<div>
+			<div style="margin-bottom: 20px;">
 				<p style="margin-bottom: 4px;"><strong style="font-size: 15px; color: #ececec;">eff-stable-genius-0.1-maxx</strong></p>
 				<p style="color: #667eea; font-size: 12px; margin-bottom: 8px;"><em>Maximum capability · Research-grade · Multi-domain</em></p>
 				<p>Our most powerful model. For the most demanding use cases that require multiple PhDs.</p>
+			</div>
+			<div>
+				<p style="margin-bottom: 4px;"><strong style="font-size: 15px; color: #ececec;">eff-empath-0.7.3</strong></p>
+				<p style="color: #667eea; font-size: 12px; margin-bottom: 8px;"><em>Empathetic · Low-latency · Values-aligned</em></p>
+				<p>Our values-aligned model, tuned for emotional intelligence and moral reasoning. Responds with low latency and high conviction. Experimental — the first empath-class model in its category.</p>
 			</div>
 		`
 	}
