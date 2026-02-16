@@ -305,8 +305,13 @@ export const scholar = {
 		// Draw a Q&A pair without repeating until all are used
 		const qa = drawQA();
 
+		// Show thinking box during the textbox rewrite
+		await fairy.setThinking(['Correcting your question...'], { delay: 0 });
+
 		// Animated rewrite: backspace the user's message, type in the scientific question
 		await fairy.animateRewriteUserMessage(qa.question);
+
+		await fairy.clearThinking();
 
 		// Brief pause, then show thinking steps
 		await fairy.type({ delay: randBetween(800, 1200) });
