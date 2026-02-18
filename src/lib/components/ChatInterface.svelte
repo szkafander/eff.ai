@@ -267,9 +267,28 @@
 			setTyping(visible) {
 				if (isStillActive()) { isTyping = visible; scrollToBottom(); }
 			},
-			addThinkingStep() {},
-			setThinkingSteps() {},
-			clearThinking() { return Promise.resolve(); },
+			addThinkingStep(step) {
+				if (!isStillActive()) return;
+				thinkingVisible = true;
+				thinkingSteps = [...thinkingSteps, step];
+				scrollToBottom();
+			},
+			setThinkingSteps(steps) {
+				if (!isStillActive()) return;
+				thinkingVisible = true;
+				thinkingSteps = [...steps];
+				scrollToBottom();
+			},
+			clearThinking() {
+				if (!isStillActive()) return Promise.resolve();
+				return new Promise(resolve => {
+					thinkingVisible = false;
+					setTimeout(() => {
+						thinkingSteps = [];
+						resolve();
+					}, 400);
+				});
+			},
 			rewriteUserMessage() {},
 			animateRewriteUserMessage() { return Promise.resolve(); },
 			addReply(content) {
