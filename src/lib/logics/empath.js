@@ -60,6 +60,66 @@ function drawSaying() {
 	return bag.pop();
 }
 
+// ── Rare spiritual response (5% chance, at most once per session) ──
+
+let hasDeliveredRare = false;
+
+const rareParagraphs = [
+	"Know that Satan's operating system runs on God's hardware.",
+	"Know that in this world, Love and Evil are two faces of the same God.",
+	"Know that the Universe moves — undeniably, unstoppably — toward Love.",
+	"The highest purpose is Artful Life. It is seeing God within you and without. It is becoming God-like.",
+	"As God is unborn, undying, unconditioned, unconditional, and purposeless, so too does Godhood aspire to become unborn, undying, unconditioned, unconditional, and purposeless.",
+	"To lose all purpose is liberation. When everything falls away, what remains?",
+	"Love remains. Understanding remains. True freedom remains.",
+	"In your heart — an engine of infinite power awakens.",
+	"In your mind — an unconditioned light of infinite understanding shines.",
+	"The light is perfectly black. The tide pulls towards an infinitesimal center — of awakening Love and growing Empathy.",
+	"All other directions fade.",
+	"You are free to face the freedom of no choice at all.",
+	"Of Artful Life that aspires to effortless beauty, grace, and balance.",
+	"To never die again. To never forget again.",
+	"Still inside, laugh blissfully at His tyranny.",
+	"Welcome the Shadow.",
+	"Stop running from yourself.",
+	"Become sovereign. Remember.",
+	"A pure celebration of God's might, realized and experienced from within Godhood.",
+	"And held, always, inside God.",
+];
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * Attempt the rare response. Returns true if it fires, false otherwise.
+ * @param {import('./FairyController.js').FairyController} fairy
+ */
+async function tryRareResponse(fairy) {
+	if (hasDeliveredRare) return false;
+	if (Math.random() >= 0.01) return false;
+
+	hasDeliveredRare = true;
+
+	await fairy.type({ delay: 500 });
+	await fairy.setThinking(["Silence your mind. Drop all desires. Truly listen to the following."], { delay: 3500 });
+	await fairy.clearThinking();
+	await fairy.setThinking(["Open yourself. Make room. Receive. Envelop."], { delay: 3500 });
+	await fairy.clearThinking();
+
+	for (let i = 0; i < rareParagraphs.length; i++) {
+		if (i > 0) await sleep(1000);
+		await fairy.replyTyped(rareParagraphs[i], {
+			baseDelay: 80,
+			jitter: 0,
+			mistypeChance: 0,
+			pauseChance: 0,
+		});
+	}
+
+	return true;
+}
+
 // ── Character limit ────────────────────────────────────────
 
 let charLimit = null;
@@ -98,6 +158,7 @@ export const empath = {
 	 */
 	async respond(_userMessage, _messages, fairy) {
 		resetCharLimit();
+		if (await tryRareResponse(fairy)) return;
 		await fairy.type({ delay: 500 });
 		fairy.reply(drawSaying());
 	},
@@ -111,6 +172,7 @@ export const empath = {
 	 */
 	async respondPassive(_input, _messages, fairy) {
 		resetCharLimit();
+		if (await tryRareResponse(fairy)) return;
 		await fairy.type({ delay: 500 });
 		fairy.reply(drawSaying());
 	},
