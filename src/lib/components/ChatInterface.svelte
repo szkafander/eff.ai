@@ -31,9 +31,12 @@
 	let messages = $derived(activeChat?.messages || []);
 	let logic = $derived(activeChat ? getLogicById(activeChat.logicId) : undefined);
 
-	// Reset visual state whenever the active chat changes
+	// Reset visual state whenever the active chat changes.
+	// Use $derived to extract just the ID so the effect only re-runs when the
+	// active chat actually switches — not on every addMessage store update.
+	let activeChatId = $derived($chatStore.activeChat);
 	$effect(() => {
-		const _id = $chatStore.activeChat;
+		activeChatId;
 		resetVisualState();
 	});
 
@@ -94,8 +97,10 @@
 
 		const controller = new FairyController({
 			setTyping(visible) {
+				console.log('setTyping', visible, 'active?', isStillActive());
 				if (!isStillActive()) return;
 				isTyping = visible;
+				console.log('isTyping set to', isTyping);
 				scrollToBottom();
 			},
 

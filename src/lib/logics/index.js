@@ -25,6 +25,7 @@ import { clueless } from './clueless.js';
 import { scholar } from './scholar.js';
 import { venting } from './venting.js';
 import { empath } from './empath.js';
+import { priv } from './private.js';
 
 /** All available logics. Add new ones here. */
 export const logics = [
@@ -32,6 +33,7 @@ export const logics = [
 	scholar,
 	venting,
 	empath,
+	priv,
 ];
 
 /** Model display names shown in the selector, mapped to logic ids */
@@ -40,6 +42,7 @@ export const models = [
 	{ id: 'venting',   name: 'eff.ai-1.2.3-thinking' },
 	{ id: 'scholar',   name: 'eff-stable-genius-0.1-maxx' },
 	{ id: 'empath',    name: 'eff-empath-0.7.3' },
+	{ id: 'private',   name: 'eff-privacy-enhanced-1.0a' },
 ];
 
 /** The default logic id for new chats */
